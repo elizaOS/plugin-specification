@@ -58,8 +58,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "@elizaos/core-plugin-v2": "1.0.0-beta.27",
-    "@types/hapi__shot": "^6.0.0",
+    "@elizaos/core-plugin-v2": "workspace:*",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
     "dotenv": "16.4.5",
