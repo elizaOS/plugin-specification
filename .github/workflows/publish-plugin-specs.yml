@@ -37,31 +37,6 @@ jobs:
             echo "::set-output name=bump::false"
           fi
 
-  publish-v1:
-    name: Publish core-plugin-v1
-    needs: detect-version-bumps
-    if: needs.detect-version-bumps.outputs.core_plugin_v1 == 'true'
-    runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build
-        run: bun run build
-        working-directory: core-plugin-v1
-
-      - name: Publish to npm
-        run: bun deploy
-        working-directory: core-plugin-v1
-
   publish-v2:
     name: Publish core-plugin-v2
     needs: detect-version-bumps
@@ -86,3 +61,28 @@ jobs:
       - name: Publish to npm
         run: bun deploy
         working-directory: core-plugin-v2
+
+  publish-v1:
+    name: Publish core-plugin-v1
+    needs: [detect-version-bumps, publish-v2]
+    if: needs.detect-version-bumps.outputs.core_plugin_v1 == 'true'
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
+        working-directory: core-plugin-v1
+
+      - name: Publish to npm
+        run: bun deploy
+        working-directory: core-plugin-v1
