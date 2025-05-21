@@ -1,4 +1,4 @@
-name: Publish Core Plugins
+name: Publish Plugin Specs
 
 on:
   push:
