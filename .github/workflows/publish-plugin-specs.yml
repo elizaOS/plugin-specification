@@ -43,7 +43,7 @@ jobs:
     if: needs.detect-version-bumps.outputs.core_plugin_v2 == 'true'
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,7 +68,7 @@ jobs:
     if: needs.detect-version-bumps.outputs.core_plugin_v1 == 'true'
     runs-on: ubuntu-latest
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
