@@ -79,6 +79,10 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Install latest core-plugin-v2
+        run: bun add @elizaos/core-plugin-v2@latest
+        working-directory: core-plugin-v1
+
       - name: Build
         run: bun run build
         working-directory: core-plugin-v1
