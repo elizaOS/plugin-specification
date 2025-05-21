@@ -1,6 +1,6 @@
 {
   "name": "@elizaos/core-plugin-v2",
-  "version": "1.0.0-beta.53",
+  "version": "1.0.0-beta.54",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -58,7 +58,7 @@
     "typescript": "5.8.2"
   },
   "dependencies": {
-    "@elizaos/core": "workspace:*",
+    "@elizaos/core": "^1.0.0-beta",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
     "dotenv": "16.4.5",

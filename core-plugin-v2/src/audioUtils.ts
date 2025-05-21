@@ -1,7 +1,8 @@
 import {
   getWavHeader as coreGetWavHeader,
   prependWavHeader as corePrependWavHeader,
-} from '@elizaos/core';
+} from "@elizaos/core";
+import { Readable } from "node:stream";
 
 /**
  * Generates a WAV file header based on the provided audio parameters.
@@ -37,7 +38,13 @@ function prependWavHeader(
   channelCount = 1,
   bitsPerSample = 16
 ): typeof Readable {
-  return corePrependWavHeader(readable, audioLength, sampleRate, channelCount, bitsPerSample);
+  return corePrependWavHeader(
+    readable,
+    audioLength,
+    sampleRate,
+    channelCount,
+    bitsPerSample
+  );
 }
 
 export { getWavHeader, prependWavHeader };

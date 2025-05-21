@@ -1,4 +1,5 @@
 import {
+  Action,
   composeActionExamples as coreComposeActionExamples,
   formatActionNames as coreFormatActionNames,
   formatActions as coreFormatActions,

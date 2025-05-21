@@ -11,17 +11,24 @@ import {
   postCreationTemplate as corePostCreationTemplate,
   booleanFooter as coreBooleanFooter,
   parseBooleanFromText as coreParseBooleanFromText,
-  stringArrayFooter as coreStringArrayFooter,
-  parseJsonArrayFromText as coreParseJsonArrayFromText,
-  extractAttributes as coreExtractAttributes,
+  // stringArrayFooter as coreStringArrayFooter,
+  // parseJsonArrayFromText as coreParseJsonArrayFromText,
+  // extractAttributes as coreExtractAttributes,
+  parseJSONObjectFromText as coreParseJSONObjectFromText,
   normalizeJsonString as coreNormalizeJsonString,
-  cleanJsonResponse as coreCleanJsonResponse,
-  postActionResponseFooter as corePostActionResponseFooter,
-  parseActionResponseFromText as coreParseActionResponseFromText,
+  // cleanJsonResponse as coreCleanJsonResponse,
+  // postActionResponseFooter as corePostActionResponseFooter,
+  // parseActionResponseFromText as coreParseActionResponseFromText,
   truncateToCompleteSentence as coreTruncateToCompleteSentence,
   splitChunks as coreSplitChunks,
   trimTokens as coreTrimTokens,
-} from '@elizaos/core';
+  TemplateType,
+  State,
+  Memory,
+  Entity,
+  ActionResponse,
+  IAgentRuntime,
+} from "@elizaos/core";
 
 /**
  * Composes a context string by replacing placeholders in a template with corresponding values from the state.
@@ -58,7 +65,7 @@ export const composePrompt = ({
   state: { [key: string]: string };
   template: TemplateType;
 }) => {
-  return coreComposePrompt(state, template);
+  return coreComposePrompt({ state, template });
 };
 
 /**
@@ -76,7 +83,7 @@ export const composePromptFromState = ({
   state: State;
   template: TemplateType;
 }) => {
-  return coreComposePromptFromState(state, template);
+  return coreComposePromptFromState({ state, template });
 };
 
 /**
@@ -135,7 +142,7 @@ export const formatPosts = ({
   entities: Entity[];
   conversationHeader?: boolean;
 }) => {
-  return coreFormatPosts(messages, entities, conversationHeader);
+  return coreFormatPosts({ messages, entities, conversationHeader });
 };
 
 /**
@@ -152,7 +159,7 @@ export const formatMessages = ({
   messages: Memory[];
   entities: Entity[];
 }) => {
-  return coreFormatMessages(messages, entites);
+  return coreFormatMessages({ messages, entities });
 };
 
 export const formatTimestamp = (messageDate: number) => {
@@ -173,11 +180,13 @@ export const booleanFooter: string = coreBooleanFooter;
  * @param {string | undefined | null} value - The input text to parse
  * @returns {boolean} - Returns `true` for affirmative inputs, `false` for negative or unrecognized inputs
  */
-export function parseBooleanFromText(value: string | undefined | null): boolean {
+export function parseBooleanFromText(
+  value: string | undefined | null
+): boolean {
   return coreParseBooleanFromText(value);
 }
 
-export const stringArrayFooter = coreStringArrayFooter;
+// export const stringArrayFooter = coreStringArrayFooter;
 
 /**
  * Parses a JSON array from a given text. The function looks for a JSON block wrapped in triple backticks
@@ -188,9 +197,9 @@ export const stringArrayFooter = coreStringArrayFooter;
  * @param text - The input text from which to extract and parse the JSON array.
  * @returns An array parsed from the JSON string if successful; otherwise, null.
  */
-export function parseJsonArrayFromText(text: string) {
-  return coreParseJsonArrayFromText(text);
-}
+// export function parseJsonArrayFromText(text: string) {
+//   return coreParseJsonArrayFromText(text);
+// }
 
 /**
  * Parses a JSON object from a given text. The function looks for a JSON block wrapped in triple backticks
@@ -202,7 +211,9 @@ export function parseJsonArrayFromText(text: string) {
  * @param text - The input text from which to extract and parse the JSON object.
  * @returns An object parsed from the JSON string if successful; otherwise, null or the result of parsing an array.
  */
-export function parseJSONObjectFromText(text: string): Record<string, any> | null {
+export function parseJSONObjectFromText(
+  text: string
+): Record<string, any> | null {
   return coreParseJSONObjectFromText(text);
 }
 
@@ -212,12 +223,12 @@ export function parseJSONObjectFromText(text: string): Record<string, any> | nul
  * @param attributesToExtract - An array of attribute names to extract.
  * @returns An object containing the extracted attributes.
  */
-export function extractAttributes(
-  response: string,
-  attributesToExtract?: string[]
-): { [key: string]: string | undefined } {
-  return coreExtractAttributes(response, attributesToExtract);
-}
+// export function extractAttributes(
+//   response: string,
+//   attributesToExtract?: string[]
+// ): { [key: string]: string | undefined } {
+//   return coreExtractAttributes(response, attributesToExtract);
+// }
 
 /**
  * Normalizes a JSON-like string by correcting formatting issues:
@@ -245,30 +256,43 @@ export const normalizeJsonString = (str: string) => {
  * @param response - The raw JSON-like string response to clean.
  * @returns The cleaned string, ready for parsing or further processing.
  */
-export function cleanJsonResponse(response: string): string {
-  return coreCleanJsonResponse(response);
-}
+// export function cleanJsonResponse(response: string): string {
+//   return coreCleanJsonResponse(response);
+// }
 
-export const postActionResponseFooter: string = corePostActionResponseFooter;
+// export const postActionResponseFooter: string = corePostActionResponseFooter;
 
-export const parseActionResponseFromText = (text: string): { actions: ActionResponse } => {
-  return coreParseActionResponseFromText(text);
-};
+// export const parseActionResponseFromText = (
+//   text: string
+// ): { actions: ActionResponse } => {
+//   return coreParseActionResponseFromText(text);
+// };
 
 /**
  * Truncate text to fit within the character limit, ensuring it ends at a complete sentence.
  */
-export function truncateToCompleteSentence(text: string, maxLength: number): string {
+export function truncateToCompleteSentence(
+  text: string,
+  maxLength: number
+): string {
   return coreTruncateToCompleteSentence(text, maxLength);
 }
 
-export async function splitChunks(content: string, chunkSize = 512, bleed = 20): Promise<string[]> {
+export async function splitChunks(
+  content: string,
+  chunkSize = 512,
+  bleed = 20
+): Promise<string[]> {
   return coreSplitChunks(content, chunkSize, bleed);
 }
 
 /**
  * Trims the provided text prompt to a specified token limit using a tokenizer model and type.
  */
-export async function trimTokens(prompt: string, maxTokens: number, runtime: IAgentRuntime) {
+export async function trimTokens(
+  prompt: string,
+  maxTokens: number,
+  runtime: IAgentRuntime
+) {
   return coreTrimTokens(prompt, maxTokens, runtime);
 }

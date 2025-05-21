@@ -1,9 +1,9 @@
 import {
   formatMessages as coreFormatMessages,
   formatTimestamp as coreFormatTimestamp,
-} from '@elizaos/core-plugin-v2';
+} from "@elizaos/core-plugin-v2";
 
-import type { IAgentRuntime, Actor, Content, Memory, UUID } from './types.ts';
+import type { IAgentRuntime, Actor, Content, Memory, UUID } from "./types.ts";
 
 /**
  * Get details for a list of actors.
@@ -33,8 +33,14 @@ export function formatActors({ actors }: { actors: Actor[] }) {
  * @param actors - list of actors
  * @returns string
  */
-export const formatMessages = ({ messages, actors }: { messages: Memory[]; actors: Actor[] }) => {
-  return coreFormatMessages(message, actors);
+export const formatMessages = ({
+  messages,
+  actors,
+}: {
+  messages: Memory[];
+  actors: Actor[];
+}) => {
+  return coreFormatMessages(messages as any);
 };
 
 export const formatTimestamp = (messageDate: number) => {

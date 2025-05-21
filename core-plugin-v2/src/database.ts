@@ -12,7 +12,7 @@ import type {
   UUID,
   World,
   MemoryMetadata,
-} from './types';
+} from "./types";
 
 /**
  * Database adapter class to be extended by individual database adapters.
@@ -21,11 +21,21 @@ import type {
  * @abstract
  * @implements {IDatabaseAdapter}
  */
-export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter {
+export abstract class DatabaseAdapter<DB = unknown>
+  implements IDatabaseAdapter
+{
   /**
    * The database instance.
    */
   db: DB;
+
+  /**
+   * Creates a new DatabaseAdapter instance.
+   * @param db The database instance to use.
+   */
+  constructor(db: DB) {
+    this.db = db;
+  }
 
   /**
    * Initialize the database adapter.
@@ -46,7 +56,10 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    */
   abstract getEntityById(entityId: UUID): Promise<Entity | null>;
 
-  abstract getEntitiesForRoom(roomId: UUID, includeComponents?: boolean): Promise<Entity[]>;
+  abstract getEntitiesForRoom(
+    roomId: UUID,
+    includeComponents?: boolean
+  ): Promise<Entity[]>;
 
   /**
    * Creates a new entity in the database.
@@ -141,7 +154,10 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param tableName Optional table name to filter memories by type
    * @returns Promise resolving to array of Memory objects
    */
-  abstract getMemoriesByIds(memoryIds: UUID[], tableName?: string): Promise<Memory[]>;
+  abstract getMemoriesByIds(
+    memoryIds: UUID[],
+    tableName?: string
+  ): Promise<Memory[]>;
 
   /**
    * Retrieves cached embeddings based on the specified query parameters.
@@ -222,7 +238,11 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param unique Indicates if the memory should be unique.
    * @returns A Promise that resolves when the memory has been created.
    */
-  abstract createMemory(memory: Memory, tableName: string, unique?: boolean): Promise<UUID>;
+  abstract createMemory(
+    memory: Memory,
+    tableName: string,
+    unique?: boolean
+  ): Promise<UUID>;
 
   /**
    * Updates an existing memory in the database.
@@ -255,7 +275,11 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param tableName Optional table name to count memories from.
    * @returns A Promise that resolves to the number of memories.
    */
-  abstract countMemories(roomId: UUID, unique?: boolean, tableName?: string): Promise<number>;
+  abstract countMemories(
+    roomId: UUID,
+    unique?: boolean,
+    tableName?: string
+  ): Promise<number>;
 
   /**
    * Retrieves a world by its ID.
@@ -310,7 +334,14 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param roomId Optional UUID to assign to the new room.
    * @returns A Promise that resolves to the UUID of the created room.
    */
-  abstract createRoom({ id, source, type, channelId, serverId, worldId }: Room): Promise<UUID>;
+  abstract createRoom({
+    id,
+    source,
+    type,
+    channelId,
+    serverId,
+    worldId,
+  }: Room): Promise<UUID>;
 
   /**
    * Updates a specific room in the database.
@@ -373,12 +404,12 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
   abstract getParticipantUserState(
     roomId: UUID,
     entityId: UUID
-  ): Promise<'FOLLOWED' | 'MUTED' | null>;
+  ): Promise<"FOLLOWED" | "MUTED" | null>;
 
   abstract setParticipantUserState(
     roomId: UUID,
     entityId: UUID,
-    state: 'FOLLOWED' | 'MUTED' | null
+    state: "FOLLOWED" | "MUTED" | null
   ): Promise<void>;
 
   /**
@@ -408,7 +439,10 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param params Object containing the user ID, agent ID and optional tags to filter by
    * @returns A Promise that resolves to an array of Relationship objects.
    */
-  abstract getRelationships(params: { entityId: UUID; tags?: string[] }): Promise<Relationship[]>;
+  abstract getRelationships(params: {
+    entityId: UUID;
+    tags?: string[];
+  }): Promise<Relationship[]>;
 
   /**
    * Updates an existing relationship between two users.
@@ -506,7 +540,10 @@ export abstract class DatabaseAdapter<DB = unknown> implements IDatabaseAdapter 
    * @param params Object containing optional roomId and tags to filter tasks
    * @returns Promise resolving to an array of Task objects
    */
-  abstract getTasks(params: { roomId?: UUID; tags?: string[] }): Promise<Task[]>;
+  abstract getTasks(params: {
+    roomId?: UUID;
+    tags?: string[];
+  }): Promise<Task[]>;
 
   /**
    * Retrieves a specific task by its ID.

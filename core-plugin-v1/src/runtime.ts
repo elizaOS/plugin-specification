@@ -1,18 +1,15 @@
-import { AgentRuntime as coreAgentRuntime } from '@elizaos/core-plugin-v2';
+import {
+  addHeader,
+  ChannelType,
+  AgentRuntime as coreAgentRuntime,
+} from "@elizaos/core-plugin-v2";
 import {
   type Character,
-  type Goal,
   type HandlerCallback,
   type IAgentRuntime,
   type ICacheManager,
   type IDatabaseAdapter,
   type IMemoryManager,
-  type IRAGKnowledgeManager,
-  // type IVerifiableInferenceAdapter,
-  type KnowledgeItem,
-  // RAGKnowledgeItem,
-  //Media,
-  ModelClass,
   ModelProviderName,
   type Plugin,
   type Provider,
@@ -22,28 +19,118 @@ import {
   type State,
   type UUID,
   type Action,
-  type Actor,
   type Evaluator,
   type Memory,
-  type DirectoryItem,
-  type ClientInstance,
-} from './types.ts';
+} from "./types.ts";
 
-import { formatMessages } from './messages.ts';
+import { formatMessages } from "./messages.ts";
 
 export class AgentRuntime implements IAgentRuntime {
   private _runtime;
+
+  get agentId(): UUID {
+    return this._runtime.agentId;
+  }
+
+  get serverUrl(): string {
+    return (this._runtime as any).serverUrl;
+  }
+
+  get databaseAdapter(): IDatabaseAdapter {
+    return (this._runtime as any).databaseAdapter;
+  }
+
+  get token(): string {
+    return (this._runtime as any).token;
+  }
+
+  get character(): Character {
+    return this._runtime.character as any;
+  }
+
+  get actions(): Action[] {
+    return this._runtime.actions as any;
+  }
+
+  get evaluators(): Evaluator[] {
+    return this._runtime.evaluators as any;
+  }
+
+  get providers(): Provider[] {
+    return this._runtime.providers as any;
+  }
+
+  get plugins(): Plugin[] {
+    return this._runtime.plugins as any;
+  }
+
+  get modelProvider() {
+    return (this._runtime as any).modelProvider;
+  }
+
+  get imageModelProvider() {
+    return (this._runtime as any).imageModelProvider;
+  }
+
+  get imageVisionModelProvider() {
+    return (this._runtime as any).imageVisionModelProvider;
+  }
+
+  get messageManager() {
+    return (this._runtime as any).messageManager;
+  }
+
+  get routes() {
+    return this._runtime.routes;
+  }
+
+  get services() {
+    return (this._runtime as any).services;
+  }
+
+  get events() {
+    return this._runtime.events;
+  }
+
+  get descriptionManager() {
+    return (this._runtime as any).descriptionManager;
+  }
+
+  get documentsManager() {
+    return (this._runtime as any).documentsManager;
+  }
+
+  get knowledgeManager() {
+    return (this._runtime as any).knowledgeManager;
+  }
+
+  get ragKnowledgeManager() {
+    return (this._runtime as any).ragKnowledgeManager;
+  }
+
+  get loreManager() {
+    return (this._runtime as any).loreManager;
+  }
+
+  get cacheManager() {
+    return (this._runtime as any).cacheManager;
+  }
+
+  get clients() {
+    return (this._runtime as any).clients;
+  }
+
   registerMemoryManager(manager: IMemoryManager): void {
     // WRITE ME
   }
-  getMemoryManager(tableName: string): IMemoryManager | null {
+  getMemoryManager(tableName: string): any {
     // WRITE ME
   }
   getService<T extends Service>(service: ServiceType): T | null {
-    return this._runtime.getService(service);
+    return this._runtime.getService(service as any) as any;
   }
   async registerService(service: Service): Promise<void> {
-    return this._runtime.registerService(service);
+    return this._runtime.registerService(service as any);
   }
 
   /**
@@ -84,7 +171,7 @@ export class AgentRuntime implements IAgentRuntime {
     logging?: boolean;
     // verifiableInferenceAdapter?: IVerifiableInferenceAdapter;
   }) {
-    this._runtime = new coreAgentRuntime(opts);
+    this._runtime = new coreAgentRuntime(opts as any);
   }
 
   //private async initializeDatabase() {}
@@ -114,7 +201,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param action The action to register.
    */
   registerAction(action: Action) {
-    return this._runtime.registerAction(action);
+    return this._runtime.registerAction(action as any);
   }
 
   /**
@@ -122,7 +209,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param evaluator The evaluator to register.
    */
   registerEvaluator(evaluator: Evaluator) {
-    return this._runtime.registerEvaluator(evaluator);
+    return this._runtime.registerEvaluator(evaluator as any);
   }
 
   /**
@@ -130,7 +217,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param provider The context provider to register.
    */
   registerContextProvider(provider: Provider) {
-    return this._runtime.registerContextProvider(provider);
+    return this._runtime.registerContextProvider(provider as any);
   }
 
   /**
@@ -152,7 +239,12 @@ export class AgentRuntime implements IAgentRuntime {
     state?: State,
     callback?: HandlerCallback
   ): Promise<void> {
-    return this._runtime.processActions(message, responses, state, callback);
+    return this._runtime.processActions(
+      message as any,
+      responses as any,
+      state as any,
+      callback as any
+    );
   }
 
   /**
@@ -163,9 +255,19 @@ export class AgentRuntime implements IAgentRuntime {
    * @param callback The handler callback
    * @returns The results of the evaluation.
    */
-  async evaluate(message: Memory, state: State, didRespond?: boolean, callback?: HandlerCallback) {
+  async evaluate(
+    message: Memory,
+    state: State,
+    didRespond?: boolean,
+    callback?: HandlerCallback
+  ) {
     // v2 now takes responses: Memory[]
-    return this._runtime.evaluate(message, state, didRespond, callback);
+    return this._runtime.evaluate(
+      message as any,
+      state as any,
+      didRespond,
+      callback as any
+    );
   }
 
   /**
@@ -202,7 +304,13 @@ export class AgentRuntime implements IAgentRuntime {
     userScreenName?: string,
     source?: string
   ) {
-    return this._runtime.ensureConnection(userId, roomId, userName, userScreenname, source);
+    return this._runtime.ensureConnection({
+      userId,
+      roomId,
+      userName,
+      entityId: "" as UUID,
+      source,
+    });
   }
 
   /**
@@ -215,12 +323,12 @@ export class AgentRuntime implements IAgentRuntime {
   async ensureRoomExists(roomId: UUID) {
     return this._runtime.ensureRoomExists({
       id: roomId,
-      name: 'Unknown',
-      source: 'Unknown',
-      type: 'Unknown',
-      chanenlId: roomId,
-      serverId: 0,
-      worldId: 0,
+      name: "Unknown",
+      source: "Unknown",
+      type: "Unknown" as ChannelType,
+      channelId: roomId,
+      serverId: "0",
+      worldId: "0" as UUID,
       metadata: {},
     });
   }
@@ -230,8 +338,11 @@ export class AgentRuntime implements IAgentRuntime {
    * @param message The message to compose the state from.
    * @returns The state of the agent.
    */
-  async composeState(message: Memory, additionalKeys: { [key: string]: unknown } = {}) {
-    return this._runtime.composeState(message, [], []);
+  async composeState(
+    message: Memory,
+    additionalKeys: { [key: string]: unknown } = {}
+  ) {
+    return this._runtime.composeState(message as any, [], []);
   }
 
   async updateRecentMessageState(state: State): Promise<State> {
@@ -242,30 +353,32 @@ export class AgentRuntime implements IAgentRuntime {
       roomId: state.roomId,
       count: conversationLength,
       unique: false,
+      tableName: state.tableName as string,
     });
 
     // use v1 formatMessage
     const recentMessages = formatMessages({
       actors: state.actorsData ?? [],
-      messages: recentMessagesData.map((memory: Memory) => {
+      messages: state.recentMessagesData?.map((memory: Memory) => {
         const newMemory = { ...memory };
         delete newMemory.embedding;
         return newMemory;
-      }),
+      }) as Memory[],
     });
 
-    let allAttachments = [];
+    let allAttachments: any[] = [];
 
-    if (recentMessagesData && Array.isArray(recentMessagesData)) {
-      const lastMessageWithAttachment = recentMessagesData.find(
+    if (state.recentMessagesData && Array.isArray(state.recentMessagesData)) {
+      const lastMessageWithAttachment = state.recentMessagesData.find(
         (msg) => msg.content.attachments && msg.content.attachments.length > 0
       );
 
       if (lastMessageWithAttachment) {
-        const lastMessageTime = lastMessageWithAttachment?.createdAt ?? Date.now();
+        const lastMessageTime =
+          lastMessageWithAttachment?.createdAt ?? Date.now();
         const oneHourBeforeLastMessage = lastMessageTime - 60 * 60 * 1000; // 1 hour before last message
 
-        allAttachments = recentMessagesData
+        allAttachments = state.recentMessagesData
           .filter((msg) => {
             const msgTime = msg.createdAt ?? Date.now();
             return msgTime >= oneHourBeforeLastMessage;
@@ -285,12 +398,12 @@ Description: ${attachment.description}
 Text: ${attachment.text}
     `
       )
-      .join('\n');
+      .join("\n");
 
     return {
       ...state,
-      recentMessages: addHeader('# Conversation Messages', recentMessages),
-      recentMessagesData,
+      recentMessages: addHeader("# Conversation Messages", recentMessages),
+      recentMessagesData: state.recentMessagesData,
       attachments: formattedAttachments,
     } as State;
   }

@@ -1,4 +1,4 @@
-import type { Readable } from 'stream';
+import type { Readable } from "stream";
 
 /**
  * Represents a UUID string in the format "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
@@ -97,9 +97,9 @@ export interface Objective {
  * Status enum for goals
  */
 export enum GoalStatus {
-  DONE = 'DONE',
-  FAILED = 'FAILED',
-  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = "DONE",
+  FAILED = "FAILED",
+  IN_PROGRESS = "IN_PROGRESS",
 }
 
 /**
@@ -129,11 +129,11 @@ export interface Goal {
  * Model size/type classification
  */
 export enum ModelClass {
-  SMALL = 'small',
-  MEDIUM = 'medium',
-  LARGE = 'large',
-  EMBEDDING = 'embedding',
-  IMAGE = 'image',
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large",
+  EMBEDDING = "embedding",
+  IMAGE = "image",
 }
 
 /**
@@ -241,41 +241,41 @@ export type Models = {
  * Available model providers
  */
 export enum ModelProviderName {
-  OPENAI = 'openai',
-  ETERNALAI = 'eternalai',
-  ANTHROPIC = 'anthropic',
-  GROK = 'grok',
-  GROQ = 'groq',
-  LLAMACLOUD = 'llama_cloud',
-  TOGETHER = 'together',
-  LLAMALOCAL = 'llama_local',
-  LMSTUDIO = 'lmstudio',
-  GOOGLE = 'google',
-  MISTRAL = 'mistral',
-  CLAUDE_VERTEX = 'claude_vertex',
-  REDPILL = 'redpill',
-  OPENROUTER = 'openrouter',
-  OLLAMA = 'ollama',
-  HEURIST = 'heurist',
-  GALADRIEL = 'galadriel',
-  FAL = 'falai',
-  GAIANET = 'gaianet',
-  ALI_BAILIAN = 'ali_bailian',
-  VOLENGINE = 'volengine',
-  NANOGPT = 'nanogpt',
-  HYPERBOLIC = 'hyperbolic',
-  VENICE = 'venice',
-  NVIDIA = 'nvidia',
-  NINETEEN_AI = 'nineteen_ai',
-  AKASH_CHAT_API = 'akash_chat_api',
-  LIVEPEER = 'livepeer',
-  LETZAI = 'letzai',
-  DEEPSEEK = 'deepseek',
-  INFERA = 'infera',
-  BEDROCK = 'bedrock',
-  ATOMA = 'atoma',
-  SECRETAI = 'secret_ai',
-  NEARAI = 'nearai',
+  OPENAI = "openai",
+  ETERNALAI = "eternalai",
+  ANTHROPIC = "anthropic",
+  GROK = "grok",
+  GROQ = "groq",
+  LLAMACLOUD = "llama_cloud",
+  TOGETHER = "together",
+  LLAMALOCAL = "llama_local",
+  LMSTUDIO = "lmstudio",
+  GOOGLE = "google",
+  MISTRAL = "mistral",
+  CLAUDE_VERTEX = "claude_vertex",
+  REDPILL = "redpill",
+  OPENROUTER = "openrouter",
+  OLLAMA = "ollama",
+  HEURIST = "heurist",
+  GALADRIEL = "galadriel",
+  FAL = "falai",
+  GAIANET = "gaianet",
+  ALI_BAILIAN = "ali_bailian",
+  VOLENGINE = "volengine",
+  NANOGPT = "nanogpt",
+  HYPERBOLIC = "hyperbolic",
+  VENICE = "venice",
+  NVIDIA = "nvidia",
+  NINETEEN_AI = "nineteen_ai",
+  AKASH_CHAT_API = "akash_chat_api",
+  LIVEPEER = "livepeer",
+  LETZAI = "letzai",
+  DEEPSEEK = "deepseek",
+  INFERA = "infera",
+  BEDROCK = "bedrock",
+  ATOMA = "atoma",
+  SECRETAI = "secret_ai",
+  NEARAI = "nearai",
 }
 
 /**
@@ -425,7 +425,10 @@ export type Handler = (
 /**
  * Callback function type for handlers
  */
-export type HandlerCallback = (response: Content, files?: any) => Promise<Memory[]>;
+export type HandlerCallback = (
+  response: Content,
+  files?: any
+) => Promise<Memory[]>;
 
 /**
  * Validator function type for actions/evaluators
@@ -835,7 +838,10 @@ export type Character = {
   plugins: Plugin[];
 
   /** Character Processor Plugins */
-  postProcessors?: Pick<Plugin, 'name' | 'description' | 'handlePostCharacterLoaded'>[];
+  postProcessors?: Pick<
+    Plugin,
+    "name" | "description" | "handlePostCharacterLoaded"
+  >[];
 
   /** Optional configuration */
   settings?: {
@@ -876,7 +882,7 @@ export type Character = {
     chains?: {
       evm?: any[];
       solana?: any[];
-      [key: string]: any[];
+      [key: string]: any[] | string | undefined;
     };
     transcription?: TranscriptionProvider;
     ragKnowledge?: boolean;
@@ -1078,13 +1084,21 @@ export interface IDatabaseAdapter {
     }
   ): Promise<Memory[]>;
 
-  createMemory(memory: Memory, tableName: string, unique?: boolean): Promise<void>;
+  createMemory(
+    memory: Memory,
+    tableName: string,
+    unique?: boolean
+  ): Promise<void>;
 
   removeMemory(memoryId: UUID, tableName: string): Promise<void>;
 
   removeAllMemories(roomId: UUID, tableName: string): Promise<void>;
 
-  countMemories(roomId: UUID, unique?: boolean, tableName?: string): Promise<number>;
+  countMemories(
+    roomId: UUID,
+    unique?: boolean,
+    tableName?: string
+  ): Promise<number>;
 
   getGoals(params: {
     agentId: UUID;
@@ -1120,17 +1134,23 @@ export interface IDatabaseAdapter {
 
   getParticipantsForRoom(roomId: UUID): Promise<UUID[]>;
 
-  getParticipantUserState(roomId: UUID, userId: UUID): Promise<'FOLLOWED' | 'MUTED' | null>;
+  getParticipantUserState(
+    roomId: UUID,
+    userId: UUID
+  ): Promise<"FOLLOWED" | "MUTED" | null>;
 
   setParticipantUserState(
     roomId: UUID,
     userId: UUID,
-    state: 'FOLLOWED' | 'MUTED' | null
+    state: "FOLLOWED" | "MUTED" | null
   ): Promise<void>;
 
   createRelationship(params: { userA: UUID; userB: UUID }): Promise<boolean>;
 
-  getRelationship(params: { userA: UUID; userB: UUID }): Promise<Relationship | null>;
+  getRelationship(params: {
+    userA: UUID;
+    userB: UUID;
+  }): Promise<Relationship | null>;
 
   getRelationships(params: { userId: UUID }): Promise<Relationship[]>;
 
@@ -1158,7 +1178,11 @@ export interface IDatabaseAdapter {
 export interface IDatabaseCacheAdapter {
   getCache(params: { agentId: UUID; key: string }): Promise<string | undefined>;
 
-  setCache(params: { agentId: UUID; key: string; value: string }): Promise<boolean>;
+  setCache(params: {
+    agentId: UUID;
+    key: string;
+    value: string;
+  }): Promise<boolean>;
 
   deleteCache(params: { agentId: UUID; key: string }): Promise<boolean>;
 }
@@ -1183,7 +1207,10 @@ export interface IMemoryManager {
   ): Promise<{ embedding: number[]; levenshtein_score: number }[]>;
 
   getMemoryById(id: UUID): Promise<Memory | null>;
-  getMemoriesByRoomIds(params: { roomIds: UUID[]; limit?: number }): Promise<Memory[]>;
+  getMemoriesByRoomIds(params: {
+    roomIds: UUID[];
+    limit?: number;
+  }): Promise<Memory[]>;
   searchMemoriesByEmbedding(
     embedding: number[],
     opts: {
@@ -1227,7 +1254,7 @@ export interface IRAGKnowledgeManager {
   processFile(file: {
     path: string;
     content: string;
-    type: 'pdf' | 'md' | 'txt';
+    type: "pdf" | "md" | "txt";
     isShared: boolean;
   }): Promise<void>;
   cleanupDeletedKnowledgeFiles(): Promise<void>;
@@ -1239,9 +1266,9 @@ export type CacheOptions = {
 };
 
 export enum CacheStore {
-  REDIS = 'redis',
-  DATABASE = 'database',
-  FILESYSTEM = 'filesystem',
+  REDIS = "redis",
+  DATABASE = "database",
+  FILESYSTEM = "filesystem",
 }
 
 export interface ICacheManager {
@@ -1254,7 +1281,7 @@ export abstract class Service {
   private static instance: Service | null = null;
 
   static get serviceType(): ServiceType {
-    throw new Error('Service must implement static serviceType getter');
+    throw new Error("Service must implement static serviceType getter");
   }
 
   public static getInstance<T extends Service>(): T {
@@ -1355,13 +1382,18 @@ export interface IAgentRuntime {
 
   ensureRoomExists(roomId: UUID): Promise<void>;
 
-  composeState(message: Memory, additionalKeys?: { [key: string]: unknown }): Promise<State>;
+  composeState(
+    message: Memory,
+    additionalKeys?: { [key: string]: unknown }
+  ): Promise<State>;
 
   updateRecentMessageState(state: State): Promise<State>;
 }
 
 export interface IImageDescriptionService extends Service {
-  describeImage(imageUrl: string): Promise<{ title: string; description: string }>;
+  describeImage(
+    imageUrl: string
+  ): Promise<{ title: string; description: string }>;
 }
 
 export interface ITranscriptionService extends Service {
@@ -1450,15 +1482,15 @@ export interface GraphQLTag {
 }
 
 export enum IrysMessageType {
-  REQUEST = 'REQUEST',
-  DATA_STORAGE = 'DATA_STORAGE',
-  REQUEST_RESPONSE = 'REQUEST_RESPONSE',
+  REQUEST = "REQUEST",
+  DATA_STORAGE = "DATA_STORAGE",
+  REQUEST_RESPONSE = "REQUEST_RESPONSE",
 }
 
 export enum IrysDataType {
-  FILE = 'FILE',
-  IMAGE = 'IMAGE',
-  OTHER = 'OTHER',
+  FILE = "FILE",
+  IMAGE = "IMAGE",
+  OTHER = "OTHER",
 }
 
 export interface IrysTimestamp {
@@ -1503,30 +1535,30 @@ export interface ITeeLogService extends Service {
 }
 
 export enum ServiceType {
-  IMAGE_DESCRIPTION = 'image_description',
-  TRANSCRIPTION = 'transcription',
-  VIDEO = 'video',
-  TEXT_GENERATION = 'text_generation',
-  BROWSER = 'browser',
-  SPEECH_GENERATION = 'speech_generation',
-  PDF = 'pdf',
-  INTIFACE = 'intiface',
-  AWS_S3 = 'aws_s3',
-  BUTTPLUG = 'buttplug',
-  SLACK = 'slack',
-  VERIFIABLE_LOGGING = 'verifiable_logging',
-  IRYS = 'irys',
-  TEE_LOG = 'tee_log',
-  GOPLUS_SECURITY = 'goplus_security',
-  WEB_SEARCH = 'web_search',
-  EMAIL_AUTOMATION = 'email_automation',
-  NKN_CLIENT_SERVICE = 'nkn_client_service',
+  IMAGE_DESCRIPTION = "image_description",
+  TRANSCRIPTION = "transcription",
+  VIDEO = "video",
+  TEXT_GENERATION = "text_generation",
+  BROWSER = "browser",
+  SPEECH_GENERATION = "speech_generation",
+  PDF = "pdf",
+  INTIFACE = "intiface",
+  AWS_S3 = "aws_s3",
+  BUTTPLUG = "buttplug",
+  SLACK = "slack",
+  VERIFIABLE_LOGGING = "verifiable_logging",
+  IRYS = "irys",
+  TEE_LOG = "tee_log",
+  GOPLUS_SECURITY = "goplus_security",
+  WEB_SEARCH = "web_search",
+  EMAIL_AUTOMATION = "email_automation",
+  NKN_CLIENT_SERVICE = "nkn_client_service",
 }
 
 export enum LoggingLevel {
-  DEBUG = 'debug',
-  VERBOSE = 'verbose',
-  NONE = 'none',
+  DEBUG = "debug",
+  VERBOSE = "verbose",
+  NONE = "none",
 }
 
 export type KnowledgeItem = {
@@ -1568,27 +1600,27 @@ export interface ISlackService extends Service {
 }
 
 export enum TokenizerType {
-  Auto = 'auto',
-  TikToken = 'tiktoken',
+  Auto = "auto",
+  TikToken = "tiktoken",
 }
 
 export enum TranscriptionProvider {
-  OpenAI = 'openai',
-  Deepgram = 'deepgram',
-  Local = 'local',
+  OpenAI = "openai",
+  Deepgram = "deepgram",
+  Local = "local",
 }
 
 export enum ActionTimelineType {
-  ForYou = 'foryou',
-  Following = 'following',
+  ForYou = "foryou",
+  Following = "following",
 }
 export enum KnowledgeScope {
-  SHARED = 'shared',
-  PRIVATE = 'private',
+  SHARED = "shared",
+  PRIVATE = "private",
 }
 
 export enum CacheKeyPrefix {
-  KNOWLEDGE = 'knowledge',
+  KNOWLEDGE = "knowledge",
 }
 
 export interface DirectoryItem {

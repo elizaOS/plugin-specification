@@ -1,4 +1,8 @@
-import { Semaphore as coreSemaphore, AgentRuntime as coreAgentRuntime } from '@elizaos/core';
+import {
+  Semaphore as coreSemaphore,
+  AgentRuntime as coreAgentRuntime,
+  ChannelType,
+} from "@elizaos/core";
 // Import types with the 'type' keyword
 import type {
   Action,
@@ -31,7 +35,7 @@ import type {
   TaskWorker,
   UUID,
   World,
-} from './types';
+} from "./types";
 
 export class Semaphore {
   private _semphonre;
@@ -63,6 +67,59 @@ export class Semaphore {
  */
 export class AgentRuntime implements IAgentRuntime {
   private _runtime;
+
+  get services(): Map<ServiceTypeName, Service> {
+    return this._runtime.services as any;
+  }
+
+  get events(): Map<string, ((params: any) => Promise<void>)[]> {
+    // If _runtime.events is already a Map, just cast it
+    if (this._runtime.events instanceof Map) {
+      return this._runtime.events as Map<
+        string,
+        ((params: any) => Promise<void>)[]
+      >;
+    }
+
+    // If it's an object that needs to be converted to a Map
+    const eventsMap = new Map<string, ((params: any) => Promise<void>)[]>();
+
+    // Convert object to Map if needed
+    if (this._runtime.events && typeof this._runtime.events === "object") {
+      Object.entries(this._runtime.events).forEach(([key, handlers]) => {
+        eventsMap.set(key, handlers as ((params: any) => Promise<void>)[]);
+      });
+    }
+
+    return eventsMap;
+  }
+
+  get routes(): Route[] {
+    return this._runtime.routes as any;
+  }
+
+  get agentId(): UUID {
+    return this._runtime.agentId;
+  }
+  get character(): Character {
+    return this._runtime.character as any;
+  }
+  get providers(): Provider[] {
+    return this._runtime.providers as any;
+  }
+  get actions(): Action[] {
+    return this._runtime.actions as any;
+  }
+  get evaluators(): Evaluator[] {
+    return this._runtime.evaluators as any;
+  }
+  get plugins(): Plugin[] {
+    return this._runtime.plugins as any;
+  }
+  get adapter(): IDatabaseAdapter {
+    return this._runtime.adapter as any;
+  }
+
   constructor(opts: {
     conversationLength?: number;
     agentId?: UUID;
@@ -73,7 +130,7 @@ export class AgentRuntime implements IAgentRuntime {
     settings?: RuntimeSettings;
     events?: { [key: string]: ((params: any) => void)[] };
   }) {
-    this._runtime = new coreAgentRuntime(opts);
+    this._runtime = new coreAgentRuntime(opts as any);
   }
 
   /**
@@ -81,11 +138,11 @@ export class AgentRuntime implements IAgentRuntime {
    * @param plugin The plugin to register
    */
   async registerPlugin(plugin: Plugin): Promise<void> {
-    return this._runtime.registerPlugin(plugin);
+    return this._runtime.registerPlugin(plugin as any);
   }
 
   getAllServices(): Map<ServiceTypeName, Service> {
-    return this._runtime.services;
+    return this._runtime.services as any;
   }
 
   async stop() {
@@ -115,7 +172,11 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.processCharacterKnowledge(items);
   }
 
-  setSetting(key: string, value: string | boolean | null | any, secret = false) {
+  setSetting(
+    key: string,
+    value: string | boolean | null | any,
+    secret = false
+  ) {
     return this._runtime.setSetting(key, value, secret);
   }
 
@@ -132,7 +193,7 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   registerDatabaseAdapter(adapter: IDatabaseAdapter) {
-    return this._runtime.registerDatabaseAdapter(adapter);
+    return this._runtime.registerDatabaseAdapter(adapter as any);
   }
 
   /**
@@ -140,7 +201,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param provider The provider to register.
    */
   registerProvider(provider: Provider) {
-    return this._runtime.registerProvider(provider);
+    return this._runtime.registerProvider(provider as any);
   }
 
   /**
@@ -148,7 +209,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param action The action to register.
    */
   registerAction(action: Action) {
-    return this._runtime.registerAction(action);
+    return this._runtime.registerAction(action as any);
   }
 
   /**
@@ -156,7 +217,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param evaluator The evaluator to register.
    */
   registerEvaluator(evaluator: Evaluator) {
-    return this._runtime.registerEvaluator(evaluator);
+    return this._runtime.registerEvaluator(evaluator as any);
   }
 
   /**
@@ -164,7 +225,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param provider The context provider to register.
    */
   registerContextProvider(provider: Provider) {
-    return this._runtime.registerContextProvider(provider);
+    return this._runtime.registerContextProvider(provider as any);
   }
 
   /**
@@ -198,7 +259,13 @@ export class AgentRuntime implements IAgentRuntime {
     callback?: HandlerCallback,
     responses?: Memory[]
   ) {
-    return this._runtime.evaluate(message, state, didRespond, callback, responses);
+    return this._runtime.evaluate(
+      message,
+      state,
+      didRespond,
+      callback,
+      responses
+    ) as any;
   }
 
   async ensureConnection({
@@ -233,7 +300,7 @@ export class AgentRuntime implements IAgentRuntime {
       type,
       channelId,
       serverId,
-      worldId,
+      worldId: worldId as UUID,
       userId,
     });
   }
@@ -242,11 +309,11 @@ export class AgentRuntime implements IAgentRuntime {
    * Ensures a participant is added to a room, checking that the entity exists first
    */
   async ensureParticipantInRoom(entityId: UUID, roomId: UUID) {
-    return this._runtime.ensureParticipantInRoom(entityId, roomid);
+    return this._runtime.ensureParticipantInRoom(entityId, roomId);
   }
 
   async removeParticipant(entityId: UUID, roomId: UUID): Promise<boolean> {
-    return this._runtime.removeParticipant(entityId, roomid);
+    return this._runtime.removeParticipant(entityId, roomId);
   }
 
   async getParticipantsForEntity(entityId: UUID): Promise<Participant[]> {
@@ -254,18 +321,24 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   async getParticipantsForRoom(roomId: UUID): Promise<UUID[]> {
-    return this._runtime.getParticipantsForRoom(roomid);
+    return this._runtime.getParticipantsForRoom(roomId);
   }
 
   async addParticipant(entityId: UUID, roomId: UUID): Promise<boolean> {
-    return this._runtime.addParticipant(entityId, roomid);
+    return this._runtime.addParticipant(entityId, roomId);
   }
 
   /**
    * Ensure the existence of a world.
    */
-  async ensureWorldExists({ id, name, serverId, metadata }: World) {
-    return this._runtime.ensureWorldExists({ id, name, serverId, metadata });
+  async ensureWorldExists({ id, name, serverId, metadata, agentId }: World) {
+    return this._runtime.ensureWorldExists({
+      id,
+      name,
+      serverId,
+      metadata,
+      agentId,
+    });
   }
 
   /**
@@ -275,7 +348,16 @@ export class AgentRuntime implements IAgentRuntime {
    * @returns The room ID of the room between the agent and the user.
    * @throws An error if the room cannot be created.
    */
-  async ensureRoomExists({ id, name, source, type, channelId, serverId, worldId, metadata }: Room) {
+  async ensureRoomExists({
+    id,
+    name,
+    source,
+    type,
+    channelId,
+    serverId,
+    worldId,
+    metadata,
+  }: Room) {
     return this._runtime.ensureRoomExists({
       id,
       name,
@@ -300,25 +382,32 @@ export class AgentRuntime implements IAgentRuntime {
     filterList: string[] | null = null, // only get providers that are in the filterList
     includeList: string[] | null = null // include providers that are private, dynamic or otherwise not included by default
   ): Promise<State> {
-    return this._runtime.composeState({ message, filterList, includeList });
+    return this._runtime.composeState({
+      message,
+      filterList,
+      includeList,
+    } as any);
   }
 
   getService<T extends Service>(service: ServiceTypeName): T | null {
-    return this._runtime.getService(service);
+    return this._runtime.getService(service) as any;
   }
 
   async registerService(service: typeof Service): Promise<void> {
-    return this._runtime.registerService(service);
+    return this._runtime.registerService(service as any);
   }
 
-  registerModel(modelType: ModelTypeName, handler: (params: any) => Promise<any>) {
-    return this._runtime.registerModel(modelType, handler);
+  registerModel(
+    modelType: ModelTypeName,
+    handler: (params: any) => Promise<any>
+  ) {
+    return this._runtime.registerModel(modelType, handler, "");
   }
 
   getModel(
     modelType: ModelTypeName
   ): ((runtime: IAgentRuntime, params: any) => Promise<any>) | undefined {
-    return this._runtime.getModel(modelType);
+    return this._runtime.getModel(modelType) as any;
   }
 
   /**
@@ -331,9 +420,9 @@ export class AgentRuntime implements IAgentRuntime {
    */
   async useModel<T extends ModelTypeName, R = ModelResultMap[T]>(
     modelType: T,
-    params: Omit<ModelParamsMap[T], 'runtime'> | any
+    params: Omit<ModelParamsMap[T], "runtime"> | any
   ): Promise<R> {
-    return this._runtime.getModel(modelType, params);
+    return this._runtime.getModel(modelType, params) as any;
   }
 
   registerEvent(event: string, handler: (params: any) => Promise<void>) {
@@ -353,14 +442,14 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   registerTaskWorker(taskHandler: TaskWorker): void {
-    return this._runtime.registerTaskWorker(taskHandler);
+    return this._runtime.registerTaskWorker(taskHandler as any);
   }
 
   /**
    * Get a task worker by name
    */
   getTaskWorker(name: string): TaskWorker | undefined {
-    return this._runtime.getTaskWorker(name);
+    return this._runtime.getTaskWorker(name) as any;
   }
 
   // Implement database adapter methods
@@ -378,11 +467,11 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   async getAgent(agentId: UUID): Promise<Agent | null> {
-    return this._runtime.getAgent(agentId);
+    return this._runtime.getAgent(agentId) as any;
   }
 
   async getAgents(): Promise<Agent[]> {
-    return this._runtime.getAgents();
+    return this._runtime.getAgents() as any;
   }
 
   async createAgent(agent: Partial<Agent>): Promise<boolean> {
@@ -398,23 +487,26 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   async ensureAgentExists(agent: Partial<Agent>): Promise<void> {
-    return this._runtime.deleteAgent(agentId);
+    return this._runtime.ensureAgentExists(agent) as any;
   }
 
   async getEntityById(entityId: UUID): Promise<Entity | null> {
     return this._runtime.getEntityById(entityId);
   }
 
-  async getEntitiesForRoom(roomId: UUID, includeComponents?: boolean): Promise<Entity[]> {
+  async getEntitiesForRoom(
+    roomId: UUID,
+    includeComponents?: boolean
+  ): Promise<Entity[]> {
     return this._runtime.getEntitiesForRoom(roomId, includeComponents);
   }
 
   async createEntity(entity: Entity): Promise<boolean> {
-    return this._runtime.createEntity(entity);
+    return this._runtime.createEntity(entity as any);
   }
 
   async updateEntity(entity: Entity): Promise<void> {
-    return this._runtime.updateEntity(entity);
+    return this._runtime.updateEntity(entity as any);
   }
 
   async getComponent(
@@ -426,16 +518,20 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.getComponent(entityId, type, worldId, sourceEntityId);
   }
 
-  async getComponents(entityId: UUID, worldId?: UUID, sourceEntityId?: UUID): Promise<Component[]> {
+  async getComponents(
+    entityId: UUID,
+    worldId?: UUID,
+    sourceEntityId?: UUID
+  ): Promise<Component[]> {
     return this._runtime.getComponents(entityId, worldId, sourceEntityId);
   }
 
   async createComponent(component: Component): Promise<boolean> {
-    return this._runtime.createComponent(component);
+    return this._runtime.createComponent(component as any);
   }
 
   async updateComponent(component: Component): Promise<void> {
-    return this._runtime.updateComponent(component);
+    return this._runtime.updateComponent(component as any);
   }
 
   async deleteComponent(componentId: UUID): Promise<void> {
@@ -443,7 +539,7 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   async addEmbeddingToMemory(memory: Memory): Promise<Memory> {
-    return this._runtime.deleteComponent(componentId);
+    return this._runtime.addEmbeddingToMemory(memory);
   }
 
   async getMemories(params: {
@@ -506,7 +602,11 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.searchMemories(params);
   }
 
-  async createMemory(memory: Memory, tableName: string, unique?: boolean): Promise<UUID> {
+  async createMemory(
+    memory: Memory,
+    tableName: string,
+    unique?: boolean
+  ): Promise<UUID> {
     return this._runtime.createMemory(memory, tableName, unique);
   }
 
@@ -524,7 +624,11 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.deleteAllMemories(roomId, tableName);
   }
 
-  async countMemories(roomId: UUID, unique?: boolean, tableName?: string): Promise<number> {
+  async countMemories(
+    roomId: UUID,
+    unique?: boolean,
+    tableName?: string
+  ): Promise<number> {
     return this._runtime.countMemories(roomId, unique, tableName);
   }
 
@@ -562,7 +666,15 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.getRoom(roomId);
   }
 
-  async createRoom({ id, name, source, type, channelId, serverId, worldId }: Room): Promise<UUID> {
+  async createRoom({
+    id,
+    name,
+    source,
+    type,
+    channelId,
+    serverId,
+    worldId,
+  }: Room): Promise<UUID> {
     return this._runtime.createRoom({
       id,
       name,
@@ -597,14 +709,14 @@ export class AgentRuntime implements IAgentRuntime {
   async getParticipantUserState(
     roomId: UUID,
     entityId: UUID
-  ): Promise<'FOLLOWED' | 'MUTED' | null> {
+  ): Promise<"FOLLOWED" | "MUTED" | null> {
     return this._runtime.getParticipantUserState(roomId, entityId);
   }
 
   async setParticipantUserState(
     roomId: UUID,
     entityId: UUID,
-    state: 'FOLLOWED' | 'MUTED' | null
+    state: "FOLLOWED" | "MUTED" | null
   ): Promise<void> {
     return this._runtime.setParticipantUserState(roomId, entityId, state);
   }
@@ -629,7 +741,10 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.getRelationship(params);
   }
 
-  async getRelationships(params: { entityId: UUID; tags?: string[] }): Promise<Relationship[]> {
+  async getRelationships(params: {
+    entityId: UUID;
+    tags?: string[];
+  }): Promise<Relationship[]> {
     return this._runtime.getRelationships(params);
   }
 

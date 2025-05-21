@@ -2,18 +2,16 @@ import {
   findEntityByName as coreFindEntityByName,
   createUniqueUuid as coreCreateUniqueUuid,
   getEntityDetails as coreGetEntityDetails,
-  formatEntities as coreFormatEntitiese,
-} from '@elizaos/core';
+  formatEntities as coreFormatEntities,
+} from "@elizaos/core";
 
 import {
   type Entity,
   type IAgentRuntime,
   type Memory,
-  ModelType,
-  type Relationship,
   type State,
   type UUID,
-} from './types';
+} from "./types";
 
 /**
  * Finds an entity by name in the given runtime environment.
@@ -28,7 +26,7 @@ export async function findEntityByName(
   message: Memory,
   state: State
 ): Promise<Entity | null> {
-  return coreFindEntityByName(runtime, message, state);
+  return coreFindEntityByName(runtime as any, message, state);
 }
 
 /**
@@ -38,7 +36,10 @@ export async function findEntityByName(
  * @param {UUID|string} baseUserId - The base user ID to use in generating the UUID.
  * @returns {UUID} - The unique UUID generated based on the runtime and base user ID.
  */
-export const createUniqueUuid = (runtime, baseUserId: UUID | string): UUID => {
+export const createUniqueUuid = (
+  runtime: IAgentRuntime,
+  baseUserId: UUID | string
+): UUID => {
   return coreCreateUniqueUuid(runtime, baseUserId);
 };
 
@@ -57,7 +58,7 @@ export async function getEntityDetails({
   runtime: IAgentRuntime;
   roomId: UUID;
 }) {
-  return coreGetEntityDetails({ runtime, roomId });
+  return coreGetEntityDetails({ runtime: runtime as any, roomId });
 }
 
 /**
@@ -68,5 +69,5 @@ export async function getEntityDetails({
  * @returns {string} A formatted string representing the entities.
  */
 export function formatEntities({ entities }: { entities: Entity[] }) {
-  return coreFormatEntities({ entities });
+  return coreFormatEntities({ entities: entities as any });
 }

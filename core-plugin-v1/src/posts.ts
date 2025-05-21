@@ -1,5 +1,5 @@
-import type { Actor, Memory } from './types.ts';
-import { formatPosts as coreFormatPosts } from '@elizaos/core-plugin-v2';
+import type { Actor, Memory } from "./types.ts";
+import { formatPosts as coreFormatPosts } from "@elizaos/core-plugin-v2";
 
 export const formatPosts = ({
   messages,
@@ -10,5 +10,5 @@ export const formatPosts = ({
   actors: Actor[];
   conversationHeader?: boolean;
 }) => {
-  return coreFormatPosts(messages, actors, conversationHeader);
+  return coreFormatPosts(messages as any);
 };

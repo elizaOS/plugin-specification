@@ -13,7 +13,10 @@ export type UUID = `${string}-${string}-${string}-${string}-${string}`;
  * @returns The same UUID with branded type information
  */
 export function asUUID(id: string): UUID {
-  if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+  if (
+    !id ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+  ) {
     throw new Error(`Invalid UUID format: ${id}`);
   }
   return id as UUID;
@@ -71,39 +74,39 @@ export type ModelTypeName = (typeof ModelType)[keyof typeof ModelType] | string;
  * Model size/type classification
  */
 export const ModelType = {
-  SMALL: 'TEXT_SMALL', // kept for backwards compatibility
-  MEDIUM: 'TEXT_LARGE', // kept for backwards compatibility
-  LARGE: 'TEXT_LARGE', // kept for backwards compatibility
-  TEXT_SMALL: 'TEXT_SMALL',
-  TEXT_LARGE: 'TEXT_LARGE',
-  TEXT_EMBEDDING: 'TEXT_EMBEDDING',
-  TEXT_TOKENIZER_ENCODE: 'TEXT_TOKENIZER_ENCODE',
-  TEXT_TOKENIZER_DECODE: 'TEXT_TOKENIZER_DECODE',
-  TEXT_REASONING_SMALL: 'REASONING_SMALL',
-  TEXT_REASONING_LARGE: 'REASONING_LARGE',
-  TEXT_COMPLETION: 'TEXT_COMPLETION',
-  IMAGE: 'IMAGE',
-  IMAGE_DESCRIPTION: 'IMAGE_DESCRIPTION',
-  TRANSCRIPTION: 'TRANSCRIPTION',
-  TEXT_TO_SPEECH: 'TEXT_TO_SPEECH',
-  AUDIO: 'AUDIO',
-  VIDEO: 'VIDEO',
-  OBJECT_SMALL: 'OBJECT_SMALL',
-  OBJECT_LARGE: 'OBJECT_LARGE',
+  SMALL: "TEXT_SMALL", // kept for backwards compatibility
+  MEDIUM: "TEXT_LARGE", // kept for backwards compatibility
+  LARGE: "TEXT_LARGE", // kept for backwards compatibility
+  TEXT_SMALL: "TEXT_SMALL",
+  TEXT_LARGE: "TEXT_LARGE",
+  TEXT_EMBEDDING: "TEXT_EMBEDDING",
+  TEXT_TOKENIZER_ENCODE: "TEXT_TOKENIZER_ENCODE",
+  TEXT_TOKENIZER_DECODE: "TEXT_TOKENIZER_DECODE",
+  TEXT_REASONING_SMALL: "REASONING_SMALL",
+  TEXT_REASONING_LARGE: "REASONING_LARGE",
+  TEXT_COMPLETION: "TEXT_COMPLETION",
+  IMAGE: "IMAGE",
+  IMAGE_DESCRIPTION: "IMAGE_DESCRIPTION",
+  TRANSCRIPTION: "TRANSCRIPTION",
+  TEXT_TO_SPEECH: "TEXT_TO_SPEECH",
+  AUDIO: "AUDIO",
+  VIDEO: "VIDEO",
+  OBJECT_SMALL: "OBJECT_SMALL",
+  OBJECT_LARGE: "OBJECT_LARGE",
 } as const;
 
 export type ServiceTypeName = (typeof ServiceType)[keyof typeof ServiceType];
 
 export const ServiceType = {
-  TRANSCRIPTION: 'transcription',
-  VIDEO: 'video',
-  BROWSER: 'browser',
-  PDF: 'pdf',
-  REMOTE_FILES: 'aws_s3',
-  WEB_SEARCH: 'web_search',
-  EMAIL: 'email',
-  TEE: 'tee',
-  TASK: 'task',
+  TRANSCRIPTION: "transcription",
+  VIDEO: "video",
+  BROWSER: "browser",
+  PDF: "pdf",
+  REMOTE_FILES: "aws_s3",
+  WEB_SEARCH: "web_search",
+  EMAIL: "email",
+  TEE: "tee",
+  TASK: "task",
 } as const;
 
 /**
@@ -127,13 +130,13 @@ export interface State {
 export type MemoryTypeAlias = string;
 
 export enum MemoryType {
-  DOCUMENT = 'document',
-  FRAGMENT = 'fragment',
-  MESSAGE = 'message',
-  DESCRIPTION = 'description',
-  CUSTOM = 'custom',
+  DOCUMENT = "document",
+  FRAGMENT = "fragment",
+  MESSAGE = "message",
+  DESCRIPTION = "description",
+  CUSTOM = "custom",
 }
-export type MemoryScope = 'shared' | 'private' | 'room';
+export type MemoryScope = "shared" | "private" | "room";
 
 /**
  * Base interface for all memory metadata types
@@ -260,7 +263,10 @@ export type Handler = (
 /**
  * Callback function type for handlers
  */
-export type HandlerCallback = (response: Content, files?: any) => Promise<Memory[]>;
+export type HandlerCallback = (
+  response: Content,
+  files?: any
+) => Promise<Memory[]>;
 
 /**
  * Validator function type for actions/evaluators
@@ -368,7 +374,11 @@ export interface Provider {
   private?: boolean;
 
   /** Data retrieval function */
-  get: (runtime: IAgentRuntime, message: Memory, state: State) => Promise<ProviderResult>;
+  get: (
+    runtime: IAgentRuntime,
+    message: Memory,
+    state: State
+  ) => Promise<ProviderResult>;
 }
 
 /**
@@ -498,17 +508,17 @@ export type Media = {
 };
 
 export enum ChannelType {
-  SELF = 'SELF', // Messages to self
-  DM = 'dm', // Direct messages between two participants
-  GROUP = 'group', // Group messages with multiple participants
-  VOICE_DM = 'VOICE_DM', // Voice direct messages
-  VOICE_GROUP = 'VOICE_GROUP', // Voice channels with multiple participants
-  FEED = 'FEED', // Social media feed
-  THREAD = 'THREAD', // Threaded conversation
-  WORLD = 'WORLD', // World channel
-  FORUM = 'FORUM', // Forum discussion
+  SELF = "SELF", // Messages to self
+  DM = "dm", // Direct messages between two participants
+  GROUP = "group", // Group messages with multiple participants
+  VOICE_DM = "VOICE_DM", // Voice direct messages
+  VOICE_GROUP = "VOICE_GROUP", // Voice channels with multiple participants
+  FEED = "FEED", // Social media feed
+  THREAD = "THREAD", // Threaded conversation
+  WORLD = "WORLD", // World channel
+  FORUM = "FORUM", // Forum discussion
   // Legacy types - kept for backward compatibility but should be replaced
-  API = 'API', // @deprecated - Use DM or GROUP instead
+  API = "API", // @deprecated - Use DM or GROUP instead
 }
 
 /**
@@ -537,17 +547,17 @@ export abstract class Service {
 
   /** Start service connection */
   static async start(_runtime: IAgentRuntime): Promise<Service> {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   /** Stop service connection */
   static async stop(_runtime: IAgentRuntime): Promise<unknown> {
-    throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 }
 
 export type Route = {
-  type: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'STATIC';
+  type: "GET" | "POST" | "PUT" | "DELETE" | "STATIC";
   path: string;
   filePath?: string;
   handler?: (req: any, res: any, runtime: IAgentRuntime) => Promise<void>;
@@ -561,7 +571,10 @@ export interface Plugin {
   description: string;
 
   // Initialize plugin with runtime services
-  init?: (config: Record<string, string>, runtime: IAgentRuntime) => Promise<void>;
+  init?: (
+    config: Record<string, string>,
+    runtime: IAgentRuntime
+  ) => Promise<void>;
 
   // Configuration
   config?: { [key: string]: any };
@@ -668,8 +681,8 @@ export interface Character {
 }
 
 export enum AgentStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
+  ACTIVE = "active",
+  INACTIVE = "inactive",
 }
 
 export interface Agent extends Character {
@@ -711,7 +724,10 @@ export interface IDatabaseAdapter {
   getEntityById(entityId: UUID): Promise<Entity | null>;
 
   /** Get entities for room */
-  getEntitiesForRoom(roomId: UUID, includeComponents?: boolean): Promise<Entity[]>;
+  getEntitiesForRoom(
+    roomId: UUID,
+    includeComponents?: boolean
+  ): Promise<Entity[]>;
 
   /** Create new entity */
   createEntity(entity: Entity): Promise<boolean>;
@@ -728,7 +744,11 @@ export interface IDatabaseAdapter {
   ): Promise<Component | null>;
 
   /** Get all components for an entity */
-  getComponents(entityId: UUID, worldId?: UUID, sourceEntityId?: UUID): Promise<Component[]>;
+  getComponents(
+    entityId: UUID,
+    worldId?: UUID,
+    sourceEntityId?: UUID
+  ): Promise<Component[]>;
 
   /** Create component */
   createComponent(component: Component): Promise<boolean>;
@@ -796,15 +816,25 @@ export interface IDatabaseAdapter {
     tableName: string;
   }): Promise<Memory[]>;
 
-  createMemory(memory: Memory, tableName: string, unique?: boolean): Promise<UUID>;
+  createMemory(
+    memory: Memory,
+    tableName: string,
+    unique?: boolean
+  ): Promise<UUID>;
 
-  updateMemory(memory: Partial<Memory> & { id: UUID; metadata?: MemoryMetadata }): Promise<boolean>;
+  updateMemory(
+    memory: Partial<Memory> & { id: UUID; metadata?: MemoryMetadata }
+  ): Promise<boolean>;
 
   deleteMemory(memoryId: UUID): Promise<void>;
 
   deleteAllMemories(roomId: UUID, tableName: string): Promise<void>;
 
-  countMemories(roomId: UUID, unique?: boolean, tableName?: string): Promise<number>;
+  countMemories(
+    roomId: UUID,
+    unique?: boolean,
+    tableName?: string
+  ): Promise<number>;
 
   createWorld(world: World): Promise<UUID>;
 
@@ -816,7 +846,15 @@ export interface IDatabaseAdapter {
 
   getRoom(roomId: UUID): Promise<Room | null>;
 
-  createRoom({ id, name, source, type, channelId, serverId, worldId }: Room): Promise<UUID>;
+  createRoom({
+    id,
+    name,
+    source,
+    type,
+    channelId,
+    serverId,
+    worldId,
+  }: Room): Promise<UUID>;
 
   deleteRoom(roomId: UUID): Promise<void>;
 
@@ -836,12 +874,15 @@ export interface IDatabaseAdapter {
 
   getParticipantsForRoom(roomId: UUID): Promise<UUID[]>;
 
-  getParticipantUserState(roomId: UUID, entityId: UUID): Promise<'FOLLOWED' | 'MUTED' | null>;
+  getParticipantUserState(
+    roomId: UUID,
+    entityId: UUID
+  ): Promise<"FOLLOWED" | "MUTED" | null>;
 
   setParticipantUserState(
     roomId: UUID,
     entityId: UUID,
-    state: 'FOLLOWED' | 'MUTED' | null
+    state: "FOLLOWED" | "MUTED" | null
   ): Promise<void>;
 
   /**
@@ -878,7 +919,10 @@ export interface IDatabaseAdapter {
    * @param params Object containing the user ID, agent ID and optional tags to filter by
    * @returns Promise resolving to an array of Relationship objects
    */
-  getRelationships(params: { entityId: UUID; tags?: string[] }): Promise<Relationship[]>;
+  getRelationships(params: {
+    entityId: UUID;
+    tags?: string[];
+  }): Promise<Relationship[]>;
 
   ensureEmbeddingDimension(dimension: number): Promise<void>;
 
@@ -995,7 +1039,11 @@ export interface IAgentRuntime extends IDatabaseAdapter {
   // Keep these methods for backward compatibility
   registerDatabaseAdapter(adapter: IDatabaseAdapter): void;
 
-  setSetting(key: string, value: string | boolean | null | any, secret: boolean): void;
+  setSetting(
+    key: string,
+    value: string | boolean | null | any,
+    secret: boolean
+  ): void;
 
   getSetting(key: string): string | boolean | null | any;
 
@@ -1052,7 +1100,11 @@ export interface IAgentRuntime extends IDatabaseAdapter {
 
   ensureRoomExists(room: Room): Promise<void>;
 
-  composeState(message: Memory, filterList?: string[], includeList?: string[]): Promise<State>;
+  composeState(
+    message: Memory,
+    filterList?: string[],
+    includeList?: string[]
+  ): Promise<State>;
 
   /**
    * Use a model with strongly typed parameters and return values based on model type
@@ -1064,10 +1116,13 @@ export interface IAgentRuntime extends IDatabaseAdapter {
    */
   useModel<T extends ModelTypeName, R = ModelResultMap[T]>(
     modelType: T,
-    params: Omit<ModelParamsMap[T], 'runtime'> | any
+    params: Omit<ModelParamsMap[T], "runtime"> | any
   ): Promise<R>;
 
-  registerModel(modelType: ModelTypeName | string, handler: (params: any) => Promise<any>): void;
+  registerModel(
+    modelType: ModelTypeName | string,
+    handler: (params: any) => Promise<any>
+  ): void;
 
   getModel(
     modelType: ModelTypeName | string
@@ -1105,12 +1160,12 @@ export type KnowledgeItem = {
 };
 
 export enum KnowledgeScope {
-  SHARED = 'shared',
-  PRIVATE = 'private',
+  SHARED = "shared",
+  PRIVATE = "private",
 }
 
 export enum CacheKeyPrefix {
-  KNOWLEDGE = 'knowledge',
+  KNOWLEDGE = "knowledge",
 }
 
 export interface DirectoryItem {
@@ -1200,10 +1255,10 @@ export interface TeeAgent {
 }
 
 export enum TEEMode {
-  OFF = 'OFF',
-  LOCAL = 'LOCAL', // For local development with simulator
-  DOCKER = 'DOCKER', // For docker development with simulator
-  PRODUCTION = 'PRODUCTION', // For production without simulator
+  OFF = "OFF",
+  LOCAL = "LOCAL", // For local development with simulator
+  DOCKER = "DOCKER", // For docker development with simulator
+  PRODUCTION = "PRODUCTION", // For production without simulator
 }
 
 export interface RemoteAttestationQuote {
@@ -1228,7 +1283,7 @@ export interface RemoteAttestationMessage {
 }
 
 export enum TeeType {
-  TDX_DSTACK = 'tdx_dstack',
+  TDX_DSTACK = "tdx_dstack",
 }
 
 export interface TeeVendorConfig {
@@ -1248,7 +1303,11 @@ export interface TaskWorker {
     options: { [key: string]: unknown },
     task: Task
   ) => Promise<void>;
-  validate?: (runtime: IAgentRuntime, message: Memory, state: State) => Promise<boolean>;
+  validate?: (
+    runtime: IAgentRuntime,
+    message: Memory,
+    state: State
+  ) => Promise<boolean>;
 }
 
 export interface Task {
@@ -1270,9 +1329,9 @@ export interface Task {
 }
 
 export enum Role {
-  OWNER = 'OWNER',
-  ADMIN = 'ADMIN',
-  NONE = 'NONE',
+  OWNER = "OWNER",
+  ADMIN = "ADMIN",
+  NONE = "NONE",
 }
 
 export interface Setting {
@@ -1295,7 +1354,7 @@ export interface WorldSettings {
 
 export interface OnboardingConfig {
   settings: {
-    [key: string]: Omit<Setting, 'value'>;
+    [key: string]: Omit<Setting, "value">;
   };
 }
 
@@ -1438,7 +1497,7 @@ export interface ObjectGenerationParams<T = any> extends BaseModelParams {
   /** Optional JSON schema for validation */
   schema?: JSONSchema;
   /** Type of object to generate */
-  output?: 'object' | 'array' | 'enum';
+  output?: "object" | "array" | "enum";
   /** For enum type, the allowed values */
   enumValues?: string[];
   /** Model type to use */
@@ -1500,53 +1559,53 @@ export interface ModelResultMap {
  */
 export enum EventType {
   // World events
-  WORLD_JOINED = 'WORLD_JOINED',
-  WORLD_CONNECTED = 'WORLD_CONNECTED',
-  WORLD_LEFT = 'WORLD_LEFT',
+  WORLD_JOINED = "WORLD_JOINED",
+  WORLD_CONNECTED = "WORLD_CONNECTED",
+  WORLD_LEFT = "WORLD_LEFT",
 
   // Entity events
-  ENTITY_JOINED = 'ENTITY_JOINED',
-  ENTITY_LEFT = 'ENTITY_LEFT',
-  ENTITY_UPDATED = 'ENTITY_UPDATED',
+  ENTITY_JOINED = "ENTITY_JOINED",
+  ENTITY_LEFT = "ENTITY_LEFT",
+  ENTITY_UPDATED = "ENTITY_UPDATED",
 
   // Room events
-  ROOM_JOINED = 'ROOM_JOINED',
-  ROOM_LEFT = 'ROOM_LEFT',
+  ROOM_JOINED = "ROOM_JOINED",
+  ROOM_LEFT = "ROOM_LEFT",
 
   // Message events
-  MESSAGE_RECEIVED = 'MESSAGE_RECEIVED',
-  MESSAGE_SENT = 'MESSAGE_SENT',
+  MESSAGE_RECEIVED = "MESSAGE_RECEIVED",
+  MESSAGE_SENT = "MESSAGE_SENT",
 
   // Voice events
-  VOICE_MESSAGE_RECEIVED = 'VOICE_MESSAGE_RECEIVED',
-  VOICE_MESSAGE_SENT = 'VOICE_MESSAGE_SENT',
+  VOICE_MESSAGE_RECEIVED = "VOICE_MESSAGE_RECEIVED",
+  VOICE_MESSAGE_SENT = "VOICE_MESSAGE_SENT",
 
   // Interaction events
-  REACTION_RECEIVED = 'REACTION_RECEIVED',
-  POST_GENERATED = 'POST_GENERATED',
-  INTERACTION_RECEIVED = 'INTERACTION_RECEIVED',
+  REACTION_RECEIVED = "REACTION_RECEIVED",
+  POST_GENERATED = "POST_GENERATED",
+  INTERACTION_RECEIVED = "INTERACTION_RECEIVED",
 
   // Run events
-  RUN_STARTED = 'RUN_STARTED',
-  RUN_ENDED = 'RUN_ENDED',
-  RUN_TIMEOUT = 'RUN_TIMEOUT',
+  RUN_STARTED = "RUN_STARTED",
+  RUN_ENDED = "RUN_ENDED",
+  RUN_TIMEOUT = "RUN_TIMEOUT",
 
   // Action events
-  ACTION_STARTED = 'ACTION_STARTED',
-  ACTION_COMPLETED = 'ACTION_COMPLETED',
+  ACTION_STARTED = "ACTION_STARTED",
+  ACTION_COMPLETED = "ACTION_COMPLETED",
 
   // Evaluator events
-  EVALUATOR_STARTED = 'EVALUATOR_STARTED',
-  EVALUATOR_COMPLETED = 'EVALUATOR_COMPLETED',
+  EVALUATOR_STARTED = "EVALUATOR_STARTED",
+  EVALUATOR_COMPLETED = "EVALUATOR_COMPLETED",
 }
 
 /**
  * Platform-specific event type prefix
  */
 export enum PlatformPrefix {
-  DISCORD = 'DISCORD',
-  TELEGRAM = 'TELEGRAM',
-  TWITTER = 'TWITTER',
+  DISCORD = "DISCORD",
+  TELEGRAM = "TELEGRAM",
+  TWITTER = "TWITTER",
 }
 
 /**
@@ -1611,7 +1670,7 @@ export interface RunEventPayload extends EventPayload {
   roomId: UUID;
   entityId: UUID;
   startTime: number;
-  status: 'started' | 'completed' | 'timeout';
+  status: "started" | "completed" | "timeout";
   endTime?: number;
   duration?: number;
   error?: string;
@@ -1723,7 +1782,7 @@ export function createMessageMemory(params: {
     metadata: {
       type: MemoryType.MESSAGE,
       timestamp: Date.now(),
-      scope: params.agentId ? 'private' : 'shared',
+      scope: params.agentId ? "private" : "shared",
     },
   };
 }
@@ -1733,11 +1792,14 @@ export function createMessageMemory(params: {
  * @template ConfigType The configuration type for this service
  * @template ResultType The result type returned by the service operations
  */
-export interface TypedService<ConfigType = unknown, ResultType = unknown> extends Service {
+export interface TypedService<
+  ConfigType extends { [key: string]: any } = { [key: string]: any },
+  ResultType = unknown,
+> extends Service {
   /**
    * The configuration for this service instance
    */
-  config: ConfigType;
+  config?: ConfigType;
 
   /**
    * Process an input with this service
@@ -1746,7 +1808,6 @@ export interface TypedService<ConfigType = unknown, ResultType = unknown> extend
    */
   process(input: unknown): Promise<ResultType>;
 }
-
 /**
  * Generic factory function to create a typed service instance
  * @param runtime The agent runtime
@@ -1765,7 +1826,9 @@ export function getTypedService<T extends TypedService<any, any>>(
  * @param metadata The metadata to check
  * @returns True if the metadata is a DocumentMetadata
  */
-export function isDocumentMetadata(metadata: MemoryMetadata): metadata is DocumentMetadata {
+export function isDocumentMetadata(
+  metadata: MemoryMetadata
+): metadata is DocumentMetadata {
   return metadata.type === MemoryType.DOCUMENT;
 }
 
@@ -1774,7 +1837,9 @@ export function isDocumentMetadata(metadata: MemoryMetadata): metadata is Docume
  * @param metadata The metadata to check
  * @returns True if the metadata is a FragmentMetadata
  */
-export function isFragmentMetadata(metadata: MemoryMetadata): metadata is FragmentMetadata {
+export function isFragmentMetadata(
+  metadata: MemoryMetadata
+): metadata is FragmentMetadata {
   return metadata.type === MemoryType.FRAGMENT;
 }
 
@@ -1783,7 +1848,9 @@ export function isFragmentMetadata(metadata: MemoryMetadata): metadata is Fragme
  * @param metadata The metadata to check
  * @returns True if the metadata is a MessageMetadata
  */
-export function isMessageMetadata(metadata: MemoryMetadata): metadata is MessageMetadata {
+export function isMessageMetadata(
+  metadata: MemoryMetadata
+): metadata is MessageMetadata {
   return metadata.type === MemoryType.MESSAGE;
 }
 
@@ -1792,7 +1859,9 @@ export function isMessageMetadata(metadata: MemoryMetadata): metadata is Message
  * @param metadata The metadata to check
  * @returns True if the metadata is a DescriptionMetadata
  */
-export function isDescriptionMetadata(metadata: MemoryMetadata): metadata is DescriptionMetadata {
+export function isDescriptionMetadata(
+  metadata: MemoryMetadata
+): metadata is DescriptionMetadata {
   return metadata.type === MemoryType.DESCRIPTION;
 }
 
@@ -1801,7 +1870,9 @@ export function isDescriptionMetadata(metadata: MemoryMetadata): metadata is Des
  * @param metadata The metadata to check
  * @returns True if the metadata is a CustomMetadata
  */
-export function isCustomMetadata(metadata: MemoryMetadata): metadata is CustomMetadata {
+export function isCustomMetadata(
+  metadata: MemoryMetadata
+): metadata is CustomMetadata {
   return (
     metadata.type !== MemoryType.DOCUMENT &&
     metadata.type !== MemoryType.FRAGMENT &&
@@ -1830,7 +1901,9 @@ export function getVideoService(runtime: IAgentRuntime): IVideoService | null {
 /**
  * Type-safe helper for accessing the browser service
  */
-export function getBrowserService(runtime: IAgentRuntime): IBrowserService | null {
+export function getBrowserService(
+  runtime: IAgentRuntime
+): IBrowserService | null {
   return runtime.getService<IBrowserService>(ServiceType.BROWSER);
 }
 
@@ -1872,14 +1945,17 @@ export function isFragmentMemory(
  * @param defaultValue Optional default value if no text is found
  * @returns The text content or default value
  */
-export function getMemoryText(memory: Memory, defaultValue = ''): string {
+export function getMemoryText(memory: Memory, defaultValue = ""): string {
   return memory.content.text ?? defaultValue;
 }
 
 /**
  * Safely create a ServiceError from any caught error
  */
-export function createServiceError(error: unknown, code = 'UNKNOWN_ERROR'): ServiceError {
+export function createServiceError(
+  error: unknown,
+  code = "UNKNOWN_ERROR"
+): ServiceError {
   if (error instanceof Error) {
     return {
       code,
@@ -1899,7 +1975,13 @@ export function createServiceError(error: unknown, code = 'UNKNOWN_ERROR'): Serv
  */
 
 // Replace 'any' in State interface components
-export type StateValue = string | number | boolean | null | StateObject | StateArray;
+export type StateValue =
+  | string
+  | number
+  | boolean
+  | null
+  | StateObject
+  | StateArray;
 export interface StateObject {
   [key: string]: StateValue;
 }
