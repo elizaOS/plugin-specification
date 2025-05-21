@@ -59,7 +59,7 @@ jobs:
         working-directory: core-plugin-v2
 
       - name: Publish to npm
-        run: bun deploy
+        run: bun publish
         working-directory: core-plugin-v2
 
   publish-v1:
@@ -84,5 +84,5 @@ jobs:
         working-directory: core-plugin-v1
 
       - name: Publish to npm
-        run: bun deploy
+        run: bun publish
         working-directory: core-plugin-v1
