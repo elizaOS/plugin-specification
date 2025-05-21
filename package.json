@@ -1,0 +1,8 @@
+{
+  "name": "@elizaos/plugin-specification",
+  "private": true,
+  "workspaces": [
+    "core-plugin-v1",
+    "core-plugin-v2"
+  ]
+}
