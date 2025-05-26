@@ -9,6 +9,7 @@ import type {
   Agent,
   Character,
   Component,
+  Content,
   Entity,
   Evaluator,
   HandlerCallback,
@@ -28,14 +29,18 @@ import type {
   Room,
   Route,
   RuntimeSettings,
+  SendHandlerFunction,
   Service,
   ServiceTypeName,
   State,
+  TargetInfo,
   Task,
   TaskWorker,
   UUID,
   World,
 } from "./types";
+import { type Pool as PgPool } from 'pg';
+import { PGlite } from '@electric-sql/pglite';
 
 export class Semaphore {
   private _semphonre;
@@ -170,6 +175,10 @@ export class AgentRuntime implements IAgentRuntime {
 
   async processCharacterKnowledge(items: string[]) {
     return this._runtime.processCharacterKnowledge(items);
+  }
+
+  async getConnection(): Promise<PGlite | Pool> {
+    return this._runtime.getConnection();
   }
 
   setSetting(
@@ -379,13 +388,14 @@ export class AgentRuntime implements IAgentRuntime {
    */
   async composeState(
     message: Memory,
-    filterList: string[] | null = null, // only get providers that are in the filterList
-    includeList: string[] | null = null // include providers that are private, dynamic or otherwise not included by default
+    includeList: string[] | null = null,
+    onlyInclude = false,
+    skipCache = false
   ): Promise<State> {
     return this._runtime.composeState({
       message,
-      filterList,
       includeList,
+      skipCache,
     } as any);
   }
 
@@ -486,12 +496,16 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.deleteAgent(agentId);
   }
 
-  async ensureAgentExists(agent: Partial<Agent>): Promise<void> {
+  async ensureAgentExists(agent: Partial<Agent>): Promise<Agent> {
     return this._runtime.ensureAgentExists(agent) as any;
   }
 
   async getEntityById(entityId: UUID): Promise<Entity | null> {
     return this._runtime.getEntityById(entityId);
+  }
+
+  async getEntityByIds(entityIds: UUID[]): Promise<Entity[] | null> {
+    return this._runtime.getEntityByIds(entityIds);
   }
 
   async getEntitiesForRoom(
@@ -504,6 +518,11 @@ export class AgentRuntime implements IAgentRuntime {
   async createEntity(entity: Entity): Promise<boolean> {
     return this._runtime.createEntity(entity as any);
   }
+
+  async createEntities(entities: Entity[]): Promise<boolean> {
+    return this._runtime.createEntities(entities as any);
+  }
+
 
   async updateEntity(entity: Entity): Promise<void> {
     return this._runtime.updateEntity(entity as any);
@@ -569,6 +588,10 @@ export class AgentRuntime implements IAgentRuntime {
     limit?: number;
   }): Promise<Memory[]> {
     return this._runtime.getMemoriesByRoomIds(params);
+  }
+
+  async getMemoriesByServerId(params: { serverId: UUID; count?: number }): Promise<Memory[]> {
+    return this._runtime.getMemoriesByServerId(params);
   }
 
   async getCachedEmbeddings(params: {
@@ -664,6 +687,10 @@ export class AgentRuntime implements IAgentRuntime {
 
   async getRoom(roomId: UUID): Promise<Room | null> {
     return this._runtime.getRoom(roomId);
+  }
+
+  async getRoomsByIds(roomIds: UUID[]): Promise<Room[] | null> {
+    return this._runtime.getRoomsByIds(roomIds);
   }
 
   async createRoom({
@@ -795,5 +822,29 @@ export class AgentRuntime implements IAgentRuntime {
 
   emit(event: string, data: any): void {
     return this._runtime.emit(event, data);
+  }
+
+  async sendControlMessage(params: {
+    roomId: UUID;
+    action: 'enable_input' | 'disable_input';
+    target?: string;
+  }): Promise<void> {
+    return this._runtime.sendControlMessage(params);
+  }
+
+  registerSendHandler(source: string, handler: SendHandlerFunction): void {
+    return this._runtime.registerSendHandler(source, handler);
+  }
+
+  async sendMessageToTarget(target: TargetInfo, content: Content): Promise<void> {
+    return this._runtime.sendMessageToTarget(target, content);
+  }
+
+  async getMemoriesByWorldId(params: {
+    worldId: UUID;
+    count?: number;
+    tableName?: string;
+  }): Promise<Memory[]> {
+    return this._runtime.getMemoriesByWorldId(params);
   }
 }
