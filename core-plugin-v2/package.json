@@ -1,6 +1,6 @@
 {
   "name": "@elizaos/core-plugin-v2",
-  "version": "1.0.0-beta.58",
+  "version": "1.0.0-beta.59",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -34,6 +34,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@electric-sql/pglite": "^0.2.17",
     "@eslint/js": "9.16.0",
     "@rollup/plugin-commonjs": "25.0.8",
     "@rollup/plugin-json": "6.1.0",
@@ -47,10 +48,7 @@
     "@typescript-eslint/parser": "8.26.0",
     "@vitest/coverage-v8": "2.1.5",
     "lint-staged": "15.2.10",
-    "nodemon": "3.1.7",
-    "pm2": "5.4.3",
     "prettier": "3.5.3",
-    "rimraf": "6.0.1",
     "rollup": "2.79.2",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
