@@ -1,5 +1,9 @@
 import {
   createService as coreCreateService,
+  ServiceBuilder as coreServiceBuilder,
+  ServiceDefinition as coreServiceDefinition,
+  Service as coreService,
+  type IAgentRuntime as coreIAgentRuntime,
 } from "@elizaos/core";
 
 import { Service, type IAgentRuntime, type ServiceTypeName } from './types';
@@ -8,68 +12,11 @@ import { Service, type IAgentRuntime, type ServiceTypeName } from './types';
  * Service builder class that provides type-safe service creation
  * with automatic type inference
  */
-export class ServiceBuilder<TService extends Service = Service> {
-  private serviceType: ServiceTypeName | string;
-  private startFn: (runtime: IAgentRuntime) => Promise<TService>;
-  private stopFn?: () => Promise<void>;
-  private description: string;
-
+export class ServiceBuilder<TService extends Service = Service> extends coreServiceBuilder {
   constructor(serviceType: ServiceTypeName | string) {
-    this.serviceType = serviceType;
+    super(serviceType)
+    //this.serviceType = serviceType;
     this.description = '';
-  }
-
-  /**
-   * Set the service description
-   */
-  withDescription(description: string): this {
-    this.description = description;
-    return this;
-  }
-
-  /**
-   * Set the start function for the service
-   */
-  withStart(startFn: (runtime: IAgentRuntime) => Promise<TService>): this {
-    this.startFn = startFn;
-    return this;
-  }
-
-  /**
-   * Set the stop function for the service
-   */
-  withStop(stopFn: () => Promise<void>): this {
-    this.stopFn = stopFn;
-    return this;
-  }
-
-  /**
-   * Build the service class with all configured properties
-   */
-  build(): new (runtime?: IAgentRuntime) => TService {
-    const serviceType = this.serviceType;
-    const description = this.description;
-    const startFn = this.startFn;
-    const stopFn = this.stopFn;
-
-    // Create a dynamic class with the configured properties
-    return class extends (Service as any) {
-      static serviceType = serviceType;
-      capabilityDescription = description;
-
-      static async start(runtime: IAgentRuntime): Promise<Service> {
-        if (!startFn) {
-          throw new Error(`Start function not defined for service ${serviceType}`);
-        }
-        return startFn(runtime);
-      }
-
-      async stop(): Promise<void> {
-        if (stopFn) {
-          await stopFn();
-        }
-      }
-    } as any;
   }
 }
 
@@ -78,9 +25,9 @@ export class ServiceBuilder<TService extends Service = Service> {
  * @param serviceType - The service type name
  * @returns A new ServiceBuilder instance
  */
-export function createService<TService extends Service = Service>(
+export function createService<TService extends coreService = coreService>(
   serviceType: ServiceTypeName | string
-): ServiceBuilder<TService> {
+): coreServiceBuilder<TService> {
   return coreCreateService<TService>(serviceType);
 }
 
@@ -97,9 +44,9 @@ export interface ServiceDefinition<T extends Service = Service> {
 /**
  * Define a service with type safety
  */
-export function defineService<T extends Service = Service>(
-  definition: ServiceDefinition<T>
-): new (runtime?: IAgentRuntime) => T {
+export function defineService<T extends coreService = coreService>(
+  definition: coreServiceDefinition<T>
+): new (runtime?: coreIAgentRuntime) => T {
   return coreCreateService<T>(definition.serviceType)
     .withDescription(definition.description)
     .withStart(definition.start)
