@@ -21,7 +21,7 @@ export const composeActionExamples = (actionsData: Action[], count: number) => {
  * @param actions - An array of `Action` objects from which to extract names.
  * @returns A comma-separated string of action names.
  */
-export function formatActionNames(actions: Action[]) {
+export function formatActionNames(actions: Action[]): string {
   return coreFormatActionNames(actions);
 }
 
@@ -30,6 +30,6 @@ export function formatActionNames(actions: Action[]) {
  * @param actions - An array of `Action` objects to format.
  * @returns A detailed string of actions, including names and descriptions.
  */
-export function formatActions(actions: Action[]) {
+export function formatActions(actions: Action[]): string {
   return coreFormatActions(actions);
 }
