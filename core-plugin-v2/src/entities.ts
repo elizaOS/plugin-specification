@@ -3,6 +3,8 @@ import {
   createUniqueUuid as coreCreateUniqueUuid,
   getEntityDetails as coreGetEntityDetails,
   formatEntities as coreFormatEntities,
+  type IAgentRuntime as coreIAgentRuntime,
+  type Memory as coreMemory,
 } from "@elizaos/core";
 
 import {
@@ -26,7 +28,8 @@ export async function findEntityByName(
   message: Memory,
   state: State
 ): Promise<Entity | null> {
-  return coreFindEntityByName(runtime as any, message, state);
+  const rt:any = runtime
+  return coreFindEntityByName(rt as coreIAgentRuntime, message as coreMemory, state);
 }
 
 /**
