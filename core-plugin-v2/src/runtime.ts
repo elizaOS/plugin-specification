@@ -212,14 +212,6 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   /**
-   * Register a context provider to provide context for message generation.
-   * @param provider The context provider to register.
-   */
-  registerContextProvider(provider: Provider) {
-    return this._runtime.registerContextProvider(provider as any);
-  }
-
-  /**
    * Process the actions of a message.
    * @param message The message to process.
    * @param responses The array of response memories to process actions from.
