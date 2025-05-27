@@ -564,10 +564,6 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.getMemoriesByRoomIds(params);
   }
 
-  async getMemoriesByServerId(params: { serverId: UUID; count?: number }): Promise<Memory[]> {
-    return this._runtime.getMemoriesByServerId(params);
-  }
-
   async getCachedEmbeddings(params: {
     query_table_name: string;
     query_threshold: number;
