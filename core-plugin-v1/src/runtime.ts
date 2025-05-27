@@ -217,7 +217,7 @@ export class AgentRuntime implements IAgentRuntime {
    * @param provider The context provider to register.
    */
   registerContextProvider(provider: Provider) {
-    return this._runtime.registerContextProvider(provider as any);
+    return this._runtime.registerProvider(provider as any);
   }
 
   /**
