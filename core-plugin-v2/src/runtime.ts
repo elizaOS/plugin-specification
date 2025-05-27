@@ -1,6 +1,7 @@
 import {
   Semaphore as coreSemaphore,
   AgentRuntime as coreAgentRuntime,
+  SendHandlerFunction as CoreSendHandlerFunction,
   ChannelType,
 } from "@elizaos/core";
 // Import types with the 'type' keyword
@@ -39,7 +40,7 @@ import type {
   UUID,
   World,
 } from "./types";
-import { type Pool as PgPool } from 'pg';
+import { Pool } from 'pg';
 import { PGlite } from '@electric-sql/pglite';
 
 export class Semaphore {
@@ -156,25 +157,6 @@ export class AgentRuntime implements IAgentRuntime {
 
   async initialize() {
     return this._runtime.initialize();
-  }
-
-  async getKnowledge(message: Memory): Promise<KnowledgeItem[]> {
-    return this._runtime.getKnowledge(message);
-  }
-
-  async addKnowledge(
-    item: KnowledgeItem,
-    options = {
-      targetTokens: 1500,
-      overlap: 200,
-      modelContextSize: 4096,
-    }
-  ) {
-    return this._runtime.addKnowledge(item, options);
-  }
-
-  async processCharacterKnowledge(items: string[]) {
-    return this._runtime.processCharacterKnowledge(items);
   }
 
   async getConnection(): Promise<PGlite | Pool> {
@@ -320,22 +302,22 @@ export class AgentRuntime implements IAgentRuntime {
   async ensureParticipantInRoom(entityId: UUID, roomId: UUID) {
     return this._runtime.ensureParticipantInRoom(entityId, roomId);
   }
-
   async removeParticipant(entityId: UUID, roomId: UUID): Promise<boolean> {
     return this._runtime.removeParticipant(entityId, roomId);
   }
-
   async getParticipantsForEntity(entityId: UUID): Promise<Participant[]> {
     return this._runtime.getParticipantsForEntity(entityId);
   }
-
   async getParticipantsForRoom(roomId: UUID): Promise<UUID[]> {
     return this._runtime.getParticipantsForRoom(roomId);
   }
-
   async addParticipant(entityId: UUID, roomId: UUID): Promise<boolean> {
     return this._runtime.addParticipant(entityId, roomId);
   }
+  async addParticipantsRoom(entityIds: UUID[], roomId: UUID): Promise<boolean> {
+    return this._runtime.addParticipantsRoom(entityIds, roomId);
+  }
+
 
   /**
    * Ensure the existence of a world.
@@ -672,15 +654,15 @@ export class AgentRuntime implements IAgentRuntime {
   async createWorld(world: World): Promise<UUID> {
     return this._runtime.createWorld(world);
   }
-
   async getWorld(id: UUID): Promise<World | null> {
     return this._runtime.getWorld(id);
   }
-
+  async removeWorld(worldId: UUID): Promise<void> {
+    return this._runtime.removeWorld(worldId);
+  }
   async getAllWorlds(): Promise<World[]> {
     return this._runtime.getAllWorlds();
   }
-
   async updateWorld(world: World): Promise<void> {
     return this._runtime.updateWorld(world);
   }
@@ -688,11 +670,9 @@ export class AgentRuntime implements IAgentRuntime {
   async getRoom(roomId: UUID): Promise<Room | null> {
     return this._runtime.getRoom(roomId);
   }
-
   async getRoomsByIds(roomIds: UUID[]): Promise<Room[] | null> {
     return this._runtime.getRoomsByIds(roomIds);
   }
-
   async createRoom({
     id,
     name,
@@ -712,11 +692,15 @@ export class AgentRuntime implements IAgentRuntime {
       worldId,
     });
   }
-
+  async createRooms(rooms: Room[]): Promise<UUID[]> {
+    return this._runtime.createRooms(rooms);
+  }
   async deleteRoom(roomId: UUID): Promise<void> {
     return this._runtime.deleteRoom(roomId);
   }
-
+  async deleteRoomsByWorldId(worldId: UUID): Promise<void> {
+    return this._runtime.deleteRoomsByWorldId(worldId);
+  }
   async updateRoom(room: Room): Promise<void> {
     return this._runtime.updateRoom(room);
   }
@@ -732,6 +716,10 @@ export class AgentRuntime implements IAgentRuntime {
   async getRooms(worldId: UUID): Promise<Room[]> {
     return this._runtime.getRooms(worldId);
   }
+  async getRoomsByWorld(worldId: UUID): Promise<Room[]> {
+    return this._runtime.getRoomsByWorld(worldId);
+  }
+
 
   async getParticipantUserState(
     roomId: UUID,
@@ -776,11 +764,11 @@ export class AgentRuntime implements IAgentRuntime {
   }
 
   async getCache<T>(key: string): Promise<T | undefined> {
-    return this._runtime.getCache<T>(key);
+    return this._runtime.getCache(key);
   }
 
   async setCache<T>(key: string, value: T): Promise<boolean> {
-    return this._runtime.setCache<T>(key, value);
+    return this._runtime.setCache(key, value);
   }
 
   async deleteCache(key: string): Promise<boolean> {
@@ -832,8 +820,8 @@ export class AgentRuntime implements IAgentRuntime {
     return this._runtime.sendControlMessage(params);
   }
 
-  registerSendHandler(source: string, handler: SendHandlerFunction): void {
-    return this._runtime.registerSendHandler(source, handler);
+  registerSendHandler(source: string, handler: any): void {
+    return this._runtime.registerSendHandler(source, handler as any);
   }
 
   async sendMessageToTarget(target: TargetInfo, content: Content): Promise<void> {
