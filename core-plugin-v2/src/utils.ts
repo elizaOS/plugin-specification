@@ -1,6 +1,5 @@
 import { Buffer } from 'buffer';
-import pkg from 'stream-browserify';
-const { PassThrough, Readable } = pkg;
+import { PassThrough, Readable } from 'stream-browserify';
 import type { Content, Entity, IAgentRuntime, Memory, State, TemplateType } from './types';
 
 import { UUID } from './types';
