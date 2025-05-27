@@ -342,7 +342,7 @@ export class AgentRuntime implements IAgentRuntime {
     message: Memory,
     additionalKeys: { [key: string]: unknown } = {}
   ) {
-    return this._runtime.composeState(message as any, [], []);
+    return this._runtime.composeState(message as any, []);
   }
 
   async updateRecentMessageState(state: State): Promise<State> {
