@@ -4,5 +4,6 @@
   "workspaces": [
     "core-plugin-v1",
     "core-plugin-v2"
-  ]
+  ],
+  "description": "Specification plugin for ElizaOS agents"
 }
