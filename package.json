@@ -4,5 +4,6 @@
   "workspaces": [
     "core-plugin-v1",
     "core-plugin-v2"
-  ]
+  ],
+  "description": "Provides specification support for ElizaOS agents to enhance their functionality and integration."
 }
